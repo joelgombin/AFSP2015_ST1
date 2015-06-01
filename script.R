@@ -1,7 +1,10 @@
 library(dplyr)
 library(tidyr)
 library(tmap)
+library(rgdal)
+library(rgeos)
 library(gdata)
+library(stringr)
 load("/media/Data/Dropbox/Thèse/données propres/présidentielle 2012/P2012BV.Rdata")
 load("/media/Data/Dropbox/Thèse/données propres/identification/communes_ident.Rdata")
 AMM <- communes_ident[communes_ident$CodeAU10 %in% "003", "CodeInsee"]
@@ -69,3 +72,57 @@ pop <- RP_2011_IRIS_LOG %>%
   summarise(pop = sum(P11_RP))
 df_commune <- cnaf_com$`RSA f` / pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "pop"] * 100
 
+# dispatchage des données électorales sur les IRIS
+
+load("/media/Data/Dropbox/Thèse/données propres/cartes/BV2012PACA.Rdata")
+bvAMM <- PACA_BV12[substr(PACA_BV12@data$ID, 1, 5) %in% AMM, ]
+
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS04.Rdata")
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS05.Rdata")
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS06.Rdata")
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS13.Rdata")
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS83.Rdata")
+load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS84.Rdata")
+
+`IRISCONTOURS-IRIS04` <- spChFIDs(`IRISCONTOURS-IRIS04`, `IRISCONTOURS-IRIS04`@data$DCOMIRIS)
+`IRISCONTOURS-IRIS05` <- spChFIDs(`IRISCONTOURS-IRIS05`, `IRISCONTOURS-IRIS05`@data$DCOMIRIS)
+`IRISCONTOURS-IRIS06` <- spChFIDs(`IRISCONTOURS-IRIS06`, `IRISCONTOURS-IRIS06`@data$DCOMIRIS)
+`IRISCONTOURS-IRIS13` <- spChFIDs(`IRISCONTOURS-IRIS13`, `IRISCONTOURS-IRIS13`@data$DCOMIRIS)
+`IRISCONTOURS-IRIS83` <- spChFIDs(`IRISCONTOURS-IRIS83`, `IRISCONTOURS-IRIS83`@data$DCOMIRIS)
+`IRISCONTOURS-IRIS84` <- spChFIDs(`IRISCONTOURS-IRIS84`, `IRISCONTOURS-IRIS84`@data$DCOMIRIS)
+
+irisPACA <- do.call(rbind, list(`IRISCONTOURS-IRIS04`, `IRISCONTOURS-IRIS05`, `IRISCONTOURS-IRIS06`, `IRISCONTOURS-IRIS13`, `IRISCONTOURS-IRIS83`, `IRISCONTOURS-IRIS84`))
+
+irisAMM <- irisPACA[irisPACA@data$DEPCOM %in% AMM,]
+
+# il ne faut dispatcher les données que dans les cas d'Aix et Marseille. Pour les autres communes divisées en IRIS, dispatcher simplement en fonction 
+
+df2012$CodeBV <- str_replace(df2012$CodeBV, "_", "")
+
+monoiris <- irisAMM@data %>%
+  group_by(DEPCOM) %>%
+  filter(n() == 1) %>% 
+  distinct()
+df1 <- df2012[match(monoiris$DEPCOM, df2012$CodeInsee), ]
+df1$ID <- monoiris$DCOMIRIS
+df1 <- df1 %>% select(ID, Inscrits:Exprimés2)
+
+pluriiris <- irisAMM@data %>%
+  group_by(DEPCOM) %>%
+  filter(n() > 1, 
+         !DEPCOM %in% c(13201:13216, 13001))
+df2 <- df2012[match(pluriiris$DEPCOM, df2012$CodeInsee), ]
+df2$ID <- pluriiris$DCOMIRIS
+df2 <- df2 %>% select(ID, Inscrits:Exprimés2)
+
+valeursMarseille <- ventiler(bvAMM[substr(bvAMM$ID, 1, 5) %in% 13201:13216, ], irisAMM[irisAMM@data$DEPCOM %in% 13201:13216, ], df2012, depart.ID = "ID", arrivee.ID = "DCOMIRIS", df.ID = "CodeBV", variables = names(df2012)[3:24])
+valeursMarseille <- valeursMarseille %>%
+  mutate(ID = arriveeID) %>%
+  select(-arriveeID)
+
+valeursAix <- ventiler(bvAMM[substr(bvAMM$ID, 1, 5) %in% 13001, ], irisAMM[irisAMM@data$DEPCOM %in% 13001, ], df2012, depart.ID = "ID", arrivee.ID = "DCOMIRIS", df.ID = "CodeBV", variables = names(df2012)[3:24])
+valeursAix <- valeursAix %>%
+  mutate(ID = arriveeID) %>%
+  select(-arriveeID)
+
+P2012AMM <- bind_rows(df1, df2, valeursMarseille, valeursAix)
