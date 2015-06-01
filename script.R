@@ -1,6 +1,7 @@
 library(dplyr)
 library(tidyr)
 library(tmap)
+library(gdata)
 load("/media/Data/Dropbox/Thèse/données propres/présidentielle 2012/P2012BV.Rdata")
 load("/media/Data/Dropbox/Thèse/données propres/identification/communes_ident.Rdata")
 AMM <- communes_ident[communes_ident$CodeAU10 %in% "003", "CodeInsee"]
@@ -52,4 +53,19 @@ act_tp_sex_iris_rp2011 <- act_tp_sex_iris_rp2011 %>%
 load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_ACT_EMPL_P18ANS.Rdata")
 act_empl_sex_iris_rp2011 <- act_empl_sex_iris_rp2011 %>%
   mutate_each(funs(. / total * 100), F_Aides_familiaux:H_Stagiaire)
+
+## CAF
+load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_LOG.Rdata")
+cnaf <- read.xls("/media/Data/Dropbox/région Paca/Données IRIS/Prestas légales PACA.xls", pattern = "Code région")
+cnaf <- cnaf %>%
+  mutate(CodeIris = paste0(sprintf("%05.0f", `Code.département...commune`),
+                           sprintf("%04.0f", `Code.IRIS`)))
+cnaf_com <- read.csv("/media/Data/Dropbox/Thèse/données CAF/Solidarité insertion_2013_communes_ss.csv", sep = ";", as.is = TRUE, check.names = FALSE, na.strings = "nc")
+
+df_iris <- cnaf$Nombre.d.allocataires.percevant.le.Revenu.de.Solidarité.Active..Métropole. / RP_2011_IRIS_LOG[match(cnaf$CodeIris, RP_2011_IRIS_LOG$IRIS), "P11_RP"] * 100
+pop <- RP_2011_IRIS_LOG %>%
+  filter(COM %in% sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`))) %>%
+  group_by(COM) %>%
+  summarise(pop = sum(P11_RP))
+df_commune <- cnaf_com$`RSA f` / pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "pop"] * 100
 
