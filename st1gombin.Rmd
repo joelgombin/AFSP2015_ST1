@@ -1,0 +1,41 @@
+---
+title: ST1 - Crise, insécurité sociale et comportements électoraux
+author: Joël Gombin (CURAPP-ESS / UPJV) - joel.gombin@u-picardie.fr
+date: Inégalités économiques, précarité sociale et vote. Le cas de l'Aire métropolitaine marseillaise
+bibliography: biblio.bib
+csl: espacepolitique2.csl
+output: 
+  word_document:
+    reference_docx: template.docx
+---
+
+Ainsi que le rappelle l'appel à communication de la ST 1 du congrès 2015 de l'AFSP, les relations
+entre insécurité sociale, particulièrement sous les formes renouvelées qu'elles prennent du fait des
+évolutions de la structure socio-économique française, et comportement électoral sont à la fois au
+centre de nombreux travaux scientifiques (mais aussi de débats sociaux) et en même temps
+relativement mal connues. Il s'agit pourtant d'un enjeu scientifique essentiel, tant la déconstruction
+des cadres socioéconomiques constitutifs de la société fordiste mettent également à mal les modèles
+théoriques du vote qui s'appuyaient sur cette base. Il est donc important de mieux comprendre
+comment des situations – qui peuvent d'ailleurs prendre des formes très diverses – de précarité
+sociale d'une part, d'inégalités économiques d'autre part modèlent les comportements électoraux.
+
+La question des inégalités économiques est revenue au centre des débats politiques au cours des dernières années, notamment du fait d'un certain nombre de travaux savants [par exemple @piketty_capital_2013; @wilkinson_impact_2013]. Toutefois, les travaux sur ces questions sont balbutiants en France, même si des publications récentes soulignent l'intérêt renouvelé pour une sociologie politique des effets électoraux de la précarité sociale [@braconnier_inaudibles_2015]. 
+Ils sont beaucoup mieux établis à l'étranger, par exemple aux États-Unis [@bartels_unequal_2008]. Dans le cas français, certains travaux ont pu
+montrer l'impact majeur qu'ont les inégalités de revenu sur le comportement électoral – la
+participation, mais surtout l'orientation du vote [@gombin_contextualiser_2014; @gombin_elements_2013]. Il reste
+toutefois à mieux comprendre comment les inégalités de revenu s'articulent, dans le cadre de
+configurations territorialisées, avec la précarité sociale pour modeler les comportements électoraux.
+L'objectif scientifique est donc double : d'une part, enrichir l'arc des variables contextuelles et
+comprendre leur articulation entre elles et avec les comportements électoraux ; d'autre part,
+progresser dans le passage de l'observation de corrélations statistiques à la compréhension des
+mécanismes en jeu et leur efficacité.
+
+Cette communication s'appuie sur le cas de l'élection présidentielle de 2012 dans l'Aire métropolitaine marseillaise en 2012 pour explorer, dans un cas spécifique, les relations entre inégalités économiques, précarité sociale et comportement électoral. Il s'agit de procéder à une "écologie politique de la métropole" [@sellers_political_2013] marseillaise. Mais, par rapport au travail de Hoffman-Martinot et Sellers [-@hoffmann-martinot_emerging_2013]
+ou à notre travail de thèse, il s'agit ici de « descendre d'un niveau » dans l'analyse multiniveau : on
+ne compare plus des aires urbaines entre elles, mais on tente de mieux comprendre les processus à
+l'œuvre au sein d'une aire métropolitaine, à un niveau plus fin que le niveau communal utilisé
+jusqu'à présent (et qui masque d'importantes disparités infracommunales, en particulier dans les
+communes centrales).
+ 
+
+# Références
