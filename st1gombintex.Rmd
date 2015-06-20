@@ -33,7 +33,7 @@ opts_chunk$set(cache = TRUE,
                dev.args = list(family = 'Times New Roman'))
 dep_auto()
 options(digits = 2)
-options(OutDec = ',')
+#options(OutDec = ',')
 
 ```
 
@@ -241,31 +241,48 @@ tm_shape(shpAix) +
 
 Les données sociodémographiques mobilisées dans cette communication sont de deux ordres. D'une part, il s'agit de « variables lourdes » classiques : catégories socioprofessionnelles (en huit positions -- malheureusement, cette donnée n'existe pas dans une nomenclature plus fine au niveau des IRIS) et niveau de diplôme pour les plus de 18 ans. Dans les deux cas, les données sont millésimées 2011 (le dernier millésime disponible), et on a distingué ces indicateurs par sexe^[Ces données ont été reconstituées à partir du fichier détail du recensement 2011 localisé aux cantons-ou-villes. En effet, les tableaux détaillés diffusés par l'INSEE ne permettent de distinguer le niveau de diplôme ou la catégorie socioprofessionnelle par sexe que pour les plus de 15 ans.].
 
-```{r descSocioDemo1, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
-library(Hmisc)
-library(htmlTable)
-library(pander)
-bind_rows(
+```{r descSocioDemo1, results='asis',tidy=FALSE}
+library(xtable)
+tmp <- bind_rows(
   cs1_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
     gather(categorie, valeur, F_Agriculteurs:H_Retraités) %>%
-    group_by(categorie) %>%
-    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
-                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
+    mutate(categorie = str_replace_all(categorie, "_", " ")) %>%
+    separate(categorie, into = c("Genre", "categorie"), sep = 2) %>%
+    group_by(Genre, categorie) %>%
+    summarise_each(funs(Moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `Écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
   dipl_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
     gather(categorie, valeur, F_Bac_général:H_Sans_dipl) %>%
-    group_by(categorie) %>%
-    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
-                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur)
+    mutate(categorie = str_replace_all(categorie, "_", " ")) %>%
+    separate(categorie, into = c("Genre", "categorie"), sep = 2) %>%
+    group_by(Genre, categorie) %>%
+    summarise_each(funs(Moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `Écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur)
 ) %>%
-  txtRound(2) %>% 
-  pander(caption = "Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.")
-#   htmlTable(header = c("Moyenne", "Écart-type"),
-#             rnames = str_replace_all(str_sub(tmp$categorie, 3, -1), "_", " "),
-#             rgroup = c("CSP -- femmes", "CSP -- hommes", "Diplôme -- femmes", "Diplôme -- hommes"),
-#             n.rgroup = c(8, 8, 9, 9),
-#             ctable = TRUE)
+  txtRound(2)
+
+cleanf <- function(x){     
+    oldx <- c(FALSE, x[-1]==x[-length(x)])  
+    # is the value equal to the previous?    
+    res <- x
+    res[oldx] <- NA
+    return(res)}
+names(tmp)[2] <- "Catégorie"
+tmp$Genre <- ifelse(tmp$Genre %in% "F ", "Femme", "Homme")
+tmp %>%
+  mutate(Genre = cleanf(Genre)) %>%
+  xtable(caption = "Catégorie socioprofessionnelle et niveau de diplôme des habitants de l'AMM. Source : RP 2011/INSEE. Calculs : Joël Gombin.",
+         label = "table1",
+         align = "llldd") %>%
+  print.xtable(file = "",
+               hline.after = c(-1, 0, 8, 16, 25, 34),
+               include.rownames = FALSE,
+               sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
+               booktabs = TRUE,
+               comment = FALSE)
+
 ```
 
 D'autre part, plusieurs variables sont utilisées pour mesurer la précarité sociale :
@@ -277,40 +294,54 @@ D'autre part, plusieurs variables sont utilisées pour mesurer la précarité so
 
 Ces données sont issues du recensement, millésime 2011, et sont disponibles à l'IRIS^[« Îlots regroupés pour l'information statistique », il s'agit de la brique de base de diffusion des données de l'INSEE.], pour les IRIS comportant plus de 200 habitants (à la commune, dans le cas contraire). 
 
-```{r descSocioDemo2, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
+```{r descSocioDemo2, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin."}
 
 tmp <- bind_rows(
   act_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
     gather(categorie, valeur, F_Actifs_employés:H_Retraités) %>%
-    group_by(categorie) %>%
+    mutate(categorie = str_replace_all(categorie, "_", " ")) %>%
+    separate(categorie, into = c("Genre", "categorie"), sep = 2) %>%
+    group_by(Genre, categorie) %>%
     summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
                         `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
   act_tp_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
     gather(categorie, valeur, F_Sans_objet:`H_Temps partiel`) %>%
-    group_by(categorie) %>%
+    mutate(categorie = str_replace_all(categorie, "_", " ")) %>%
+    separate(categorie, into = c("Genre", "categorie"), sep = 2) %>%
+    group_by(Genre, categorie) %>%
     summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
                         `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
   act_empl_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
     gather(categorie, valeur, F_Aides_familiaux:H_Stagiaire) %>%
-    group_by(categorie) %>%
+    mutate(categorie = str_replace_all(categorie, "_", " ")) %>%
+    separate(categorie, into = c("Genre", "categorie"), sep = 2) %>%
+    group_by(Genre, categorie) %>%
     summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
                         `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
   df_cnaf %>%
     filter(str_sub(ID, 1, 5) %in% AMM) %>%
-    summarise(categorie = "RSA",
+    summarise(Genre = "Tout", 
+              categorie = "RSA",
               moyenne = weighted.mean(RSA, w = pop, na.rm = TRUE),
               `écart-type` = sqrt(wtd.var(RSA, w = pop, na.rm = TRUE)))
 ) %>%
   txtRound(2)
-tmp[, -1] %>% 
-  htmlTable(header = c("Moyenne", "Écart-type"),
-            rnames = c(str_replace_all(str_sub(tmp$categorie[-39], 3, -1), "_", " "), "RSA"),
-            rgroup = c("Statut d'activité -- femmes", "Statut d'activité -- hommes", "Temps de travail -- femmes", "Temps de travail -- hommes", "Forme d'emploi -- femmes", "Forme d'emploi -- hommes", "RSA"),
-            n.rgroup = c(6, 6, 3, 3, 10, 10, 1),
-            ctable = TRUE)
+names(tmp)[2] <- "Catégorie"
+tmp$Genre <- ifelse(tmp$Genre %in% "F ", "Femme", ifelse(tmp$Genre %in% "Tout", "Tout", "Homme"))
+tmp %>%
+  mutate(Genre = cleanf(Genre)) %>%
+  xtable(caption = "Statut d'activité, temps de travail, statut d'emploi et bénéficiaires du RSA parmi les habitants de l'AMM. Source : RP 2011/INSEE. Calculs : Joël Gombin.",
+         label = "table2",
+         align = "llldd") %>%
+  print.xtable(file = "",
+               hline.after = c(-1, 0, 6, 12, 15, 18, 28, 38, 39),
+               include.rownames = FALSE,
+               booktabs = TRUE,
+               sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
+               comment = FALSE)
 ```
 
 
@@ -323,20 +354,48 @@ Le niveau de revenu d'un territoire est mesuré à travers le revenu médian par
 * l'écart-type
 * l'indice de Gini.
 
-Tous sont mesurés sur le revenu fiscal déclaré par ménage. L'ensemble de ces indicateurs est millésimé 2011 et est issu du dispositif « Revenus fiscaux localisés », établi à partir de l'analyse des déclaratations de revenu aux services fiscaux. Il n'existe pas à notre connaissance de raison théorique d'utiliser l'un plutôt que l'autre de ces indicateurs, c'est pourquoi nous testons ici la pertinence de chacun d'entre eux. 
+Tous sont mesurés sur le revenu fiscal déclaré par ménage. L'ensemble de ces indicateurs est millésimé 2011 et est issu du dispositif « Revenus fiscaux localisés des ménages » (RFLM), établi à partir de l'analyse des déclarations de revenu aux services fiscaux par la DGFiP et l'INSEE. Il n'existe pas à notre connaissance de raison théorique d'utiliser l'un plutôt que l'autre de ces indicateurs, c'est pourquoi nous testons ici la pertinence de chacun d'entre eux. 
 
-```{r descRevenus, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de revenu et d'inégalités. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
+```{r descRevenus, results='asis'}
 
-RFDU2011iris %>%
+tmp <- RFDU2011iris %>%
     filter(str_sub(CodeIris, 1, 5) %in% AMM) %>%
-    gather(categorie, valeur, RFUCQ211, RFUCIQ11, RFUCRD11, RFUCET11, RFUCGI11) %>%
+    gather(categorie, valeur, RFUCMO11, RFUCQ211, RFUCIQ11, RFUCRD11, RFUCET11, RFUCGI11) %>%
     group_by(categorie) %>%
     summarise_each(funs(moyenne = mean(., na.rm = TRUE),
                         `écart-type` = sd(., na.rm = TRUE)), valeur)
+tmp$categorie <- c("Revenu médian", "Revenu moyen", "Écart inter-quartile", "Rapport interdécile", "Écart-type", "Indice de Gini")
+names(tmp)[1] <- "Catégorie"
+tmp %>%
+  xtable(caption = "Tendances centrales et dispersion des revenus par unité de consommation dans l'AMM. Source : RFLM 2011/DGFiP/INSEE. Calculs : Joël Gombin.",
+         label = "table3",
+         align = "lldd") %>%
+  print.xtable(file = "",
+               include.rownames = FALSE,
+               booktabs = TRUE,
+               sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
+               comment = FALSE)
 
 ```
 
+```{r corrRevenus, results='asis'}
+RFDU2011iris %>%
+  filter(str_sub(CodeIris, 1, 5) %in% AMM) %>%
+  transmute(`Revenu médian` = RFUCQ211, `Revenu moyen` = RFUCMO11, `Écart inter-quartile` = RFUCIQ11, `Rapport interdécile` = RFUCRD11, `Écart-type` = RFUCET11, `Indice de Gini` = RFUCGI11) %>%
+  cor(use = "pairwise") %>%
+  xtable(caption = "Corrélation entre les indicateurs de tendances centrales et de dispersion des revenus par unité de consommation dans l'AMM. Source : RFLM 2011/DGFiP/INSEE. Calculs : Joël Gombin.",
+         label = "table4",
+         align = "ldddddd") %>%
+  print.xtable(file = "",
+               include.rownames = TRUE,
+               size = "\\footnotesize",
+               booktabs = TRUE,
+               comment = FALSE,
+               sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
+               scalebox = 0.8)
 
+
+```
 
 ## Maille territoriale
 
