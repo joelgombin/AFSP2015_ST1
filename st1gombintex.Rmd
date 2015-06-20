@@ -1,0 +1,351 @@
+---
+title: ST1 - Crise, insécurité sociale et comportements électoraux
+author: Joël Gombin (CURAPP-ESS / UPJV) - joel.gombin@u-picardie.fr
+date: Inégalités économiques, précarité sociale et vote. Le cas de l'Aire métropolitaine marseillaise
+fontsize: 12pt
+lang: french
+classoption: oneside
+output: 
+  pdf_document: 
+    fig_caption: yes
+    fig_width: 6.5
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+    toc: no
+    includes:
+      in_header: header.tex
+      before_body: before_body.tex
+---
+
+
+
+```{r config, echo=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE,
+               autodep = TRUE,
+               warning = FALSE,
+               message = FALSE,
+               echo = FALSE,
+               fig.path = 'figure/',
+               cache.path = 'cache/',
+               dev = 'cairo_pdf', 
+               dev.args = list(family = 'Times New Roman'))
+dep_auto()
+options(digits = 2)
+options(OutDec = ',')
+
+```
+
+```{r init}
+source("./script.R")
+```
+
+
+Ainsi que le rappelle l'appel à communication de la section thématique 1 du congrès 2015 de l'AFSP, les relations
+entre insécurité sociale, particulièrement sous les formes renouvelées qu'elles prennent du fait des
+évolutions de la structure socio-économique française, et comportement électoral sont à la fois au
+centre de nombreux travaux scientifiques (mais aussi de débats sociaux) et en même temps
+relativement mal connues. Il s'agit pourtant d'un enjeu scientifique essentiel, tant la déconstruction
+des cadres socioéconomiques constitutifs de la société fordiste mettent également à mal les modèles
+théoriques du vote qui s'appuyaient sur cette base. Il est donc important de mieux comprendre
+comment des situations -- qui peuvent d'ailleurs prendre des formes très diverses -- de précarité
+sociale d'une part, d'inégalités économiques d'autre part modèlent les comportements électoraux.
+
+La question des inégalités économiques est revenue au centre des débats politiques au cours des dernières années, notamment du fait d'un certain nombre de travaux savants \citep[par exemple][]{piketty_capital_2013,wilkinson_impact_2013}. Toutefois, les travaux sur ces questions sont balbutiants en France, même si des publications récentes soulignent l'intérêt renouvelé pour une sociologie politique des effets électoraux de la précarité sociale \citep{braconnier_inaudibles_2015}. 
+Ils sont beaucoup mieux établis à l'étranger, par exemple aux États-Unis \citep{bartels_unequal_2008}. Dans le cas français, certains travaux ont pu
+montrer l'impact majeur qu'ont les inégalités de revenu sur le comportement électoral -- la
+participation, mais surtout l'orientation du vote \citep{gombin_contextualiser_2014,gombin_elements_2013}. Il reste
+toutefois à mieux comprendre comment les inégalités de revenu s'articulent, dans le cadre de
+configurations territorialisées, avec la précarité sociale pour modeler les comportements électoraux.
+L'objectif scientifique est donc double : d'une part, enrichir l'arc des variables contextuelles et
+comprendre leur articulation entre elles et avec les comportements électoraux ; d'autre part,
+progresser dans le passage de l'observation de corrélations statistiques à la compréhension des
+mécanismes en jeu et leur efficacité.
+
+Cette communication s'appuie sur le cas de l'élection présidentielle de 2012 dans l'Aire métropolitaine marseillaise pour explorer, dans un cas spécifique, les relations entre inégalités économiques, précarité sociale et comportement électoral. Il s'agit de procéder à une « écologie politique de la métropole » \citep{sellers_political_2013} marseillaise. Mais, par rapport au travail de Hoffman-Martinot et Sellers \citeyear{hoffmann-martinot_emerging_2013}
+ou à notre travail de thèse, il s'agit ici de « descendre d'un niveau » dans l'analyse multiniveau : on
+ne compare plus des aires urbaines entre elles, mais on tente de mieux comprendre les processus à
+l'œuvre au sein d'une aire métropolitaine, à un niveau plus fin que le niveau communal utilisé
+jusqu'à présent (et qui masque d'importantes disparités infracommunales, en particulier dans les
+communes centrales).
+
+Les questions auxquelles nous tentons d'apporter des réponses dans cette communication sont à la fois théoriques et méthodologiques.
+Au plan théorique, il s'agit de savoir si et comment les inégalités économiques ont une influence sur le comportement électoral, et si cette influence est distincte de celle de la précarité sociale. Au plan méthodologique, il s'agit de savoir à quel niveau spatial observer ces phénomènes. Sur la base de la littérature et de nos travaux antérieurs \citep{gombin_elements_2013,gombin_contextualiser_2014}, nous pouvons formuler les hypothèses suivantes :
+
+$H_1$ : *les inégalités économiques ont une influence sur les comportements électoraux distincte de celle d'autres facteurs « voisins » tels que la pauvreté ou la précarité sociale, ainsi que des variables lourdes traditionnelles, telles que la composition socioprofessionnelle de la population*. Elles caractérisent en effet des rapports sociaux (entre des individus ou des groupes) plutôt que des attributs individuels. En ce sens, les inégalités ne peuvent constituer qu'une propriété structurelle, là où des variables comme les variables lourdes ou des indicateurs agrégés de pauvreté ou de précarité constituent des propriétés analytiques, selon la typologie proposée par \citet{lazarsfeld_relation_1961}. Dès lors, la relation entre inégalités et comportement électoral relève nécessairement de la « corrélation collective de type II » telle que décrite par \citet{boudon_proprietes_1963} (et déjà aperçue par \citealp{menzel_comment_1950}), c'est-à-dire qui ne peut s'établir qu'au niveau agrégé, sans qu'on ne puisse la rapporter à un niveau individuel. 
+
+$H_2$ : *Les territoires marqués par les inégalités les plus fortes sont caractérisés par une plus faible participation électorale.* Selon certains auteurs, les inégalités économiques minent en effet la confiance et le capital social ; cet affaiblissement conduit à son tour à une diminution de la participation politique, et notamment électorale \citep{uslaner_inequality_2005,putnam_bowling_2001}. 
+
+$H_3$ : *Les territoires marqués par les inégalités les plus fortes sont caractérisés par un vote en faveur de Marine Le Pen plus élevé, et un vote en faveur des candidats de gauche plus faible. Le vote en faveur de Nicolas Sarkozy n'est pas substantiellement différent.* Cette hypothèse est propre au cas français et ne peut donc, pour l'heure, guère être étayée par de la littérature. Nous avions cependant déjà observé une telle corrélation \citep{gombin_contextualiser_2014}, également remarquée par Hervé Le Bras \citeyear{lebras_atlas_2014}. De manière générale, curieusement, la littérature donne peu d'indications sur les effets à attendre en termes d'orientation électorale d'inégalités élevées. Toutefois, les inégalités étant corrélées à la confiance, interpersonnelle comme dans les institutions politiques, et cette dernière étant la condition morale nécessaire à des politiques redistributives, on peut s'attendre à ce que des inégalités élevées soient plutôt associées à des attitudes politiques anti-redistributives et donc plutôt à droite \citep{uslaner_moral_2002}. De plus, certains travaux suggèrent que les préjugés raciaux sont plus élevés dans les États dans lesquels les inégalités de revenu sont les plus fortes, en tout cas aux États-Unis \citep{kennedy_disrespect_1997}. 
+
+$H_4$ : *Ce sont en particulier les électeurs des classes populaires et intermédiaires (ouvriers, employés, professions intermédiaires) qui, dans les territoires marqués par les inégalités les plus élevées, voient leur comportement le plus fortement affecté*. En effet, un niveau élevé d'inégalités accroît la distance sociale, objective et subjective, entre les groupes sociaux les plus dominés et ceux dominants. Dès lors, la capacité à se considérer comme étant inclus dans le fonctionnement du système politique, économique et social décroît, et le vote en faveur de Marine Le Pen peut être une manifestation de cette exclusion subjective.
+
+$H_5$ *Les effets électoraux des inégalités s'exercent à un niveau meso plutôt qu'à un niveau micro*. Ainsi, ce ne sont pas dans les IRIS les plus marqués par les inégalités que les effets électoraux décrits dans les hypothèses $H_2$ et $H_3$ s'observent le plus, mais dans les IRIS caractérisés par un fort poids des groupes sociaux mentionnés dans l'hypothèse $H_4$, dans des territoires caractérisés par un fort niveau d'inégalité. On peut imaginer trois explications potentiellement cumulatives. D'une part, la distribution des groupes sociaux (et des ressources) dans l'espace s'organise à l'échelle des aires urbaines, voire des métropoles, ce sont donc les inégalités à cette échelle qu'il faut considérer, alors qu'au niveau micro les inégalités sont souvent faibles, du fait de la tendance au « séparatisme social » \citep{maurin_ghetto_2004}. D'autre part, les mobilités quotidiennes (pour le travail mais aussi pour l'éducation, la consommation, etc.) s'effectuant dans une large mesure à cette échelle meso, elles conduisent à la mise en présence de groupes fortement inégaux et ppeuvent donner lieu à des interactions politiquement significatives. Enfin, un certain nombre de marchés locaux s'organisent également à cette échelle meso ; or, les effets électoraux des inégalités s'exercent sans doute, entre autres, au travers du marché. 
+
+
+# Données et méthodes
+
+## L'aire métropolitaine marseillaise 
+
+La présente étude porte sur l'aire métropolitaine marseillaise (AMM) -- qui n'est en réalité autre que l'aire urbaine d'Aix-Marseille. Celle-ci se caractérise par un niveau d'inégalités particulièrement élevé : en 2012, elle se situe au 19e rang (sur 753) des aires urbaines française pour le rapport interdécile D1/D9^[« Le rapport D9/D1 [9e décile - 1er décile] met en évidence l'écart entre le haut et le bas de la distribution ; c'est une des mesures de l'inégalité de cette distribution » (source : [INSEE](http://www.insee.fr/fr/methodes/default.asp?page=definitions/indice-gini.htm)).] du revenu disponible par unité de consommation (source : INSEE/FiLoSoFi 2012). Les choses sont peu différentes si on considère d'autres indicateurs, tel que le rapport interquartile^[Le rapport interquartile est le rapport entre le 3e et le 1er quartile.] (27e rang) ou encore l'indice de Gini (39e rang)^[L'indice de Gini est « un indicateur synthétique d'inégalités de salaires (de revenus, de niveaux de vie...). Il varie entre 0 et 1. Il est égal à 0 dans une situation d'égalité parfaite où tous les salaires, les revenus, les niveaux de vie... seraient égaux. A l'autre extrême, il est égal à 1 dans une situation la plus inégalitaire possible, celle où tous les salaires (les revenus, les niveaux de vie...) sauf un seraient nuls. Entre 0 et 1, l'inégalité est d'autant plus forte que l'indice de Gini est élevé » (source : [INSEE](http://www.insee.fr/fr/methodes/default.asp?page=definitions/indice-gini.htm)).]. Comparée aux grandes aires urbaines de taille comparable, celle d'Aix-Marseille se distingue nettement par le niveau que les inégalités y atteignent, supplantant même l'aire urbaine parisienne de ce point de vue, si on observe les rapports interdécile ou interquartile. 
+
+Dans le même temps, l'AMM se caractérise politiquement par un niveau élevé d'abstention et surtout par un vote FN important. Sans figurer parmi les aires urbaines dans lesquelles le vote FN été le plus important en 2012, il reste significativement supérieur à la moyenne, *a fortiori* si l'on tient compte du rang urbain élevé de cette aire urbaine, la troisième la plus peuplée du pays. Le poids du FN y est d'ailleurs ancien, même s'il y est très hétérogène, le pays d'Aix étant un pôle de résistance (relative) à l'audience électorale du Front. Cette hétérogénéité interne est précieuse dans la perspective de cette étude car elle offre prise à l'analyse : sans variance interne on ne peut rien analyser... 
+
+La figure 1 permet de visualiser la position de l'AMM parmi les autres aires urbaines en 2012. Elle montre également les relations qu'entretiennent les inégalités de revenu avec les résultats électoraux à l'échelle de l'ensemble des aires urbaines françaises, ce qui offre une première validation aux hypothèses formulées *supra*.  
+
+```{r graphe1, fig.cap="Inégalités et vote FN dans les aires urbaines françaises en 2012. Sources : INSEE/FiLoSoFi et ministère de l'intérieur, calculs et réalisation Joël Gombin. La droite est une droite de régression (ainsi que son intervalle de confiance à 95 %). L'aire urbaine d'Aix-Marseille figure en rouge.", fig.width=6.5, fig.height=7.5} 
+library(ggplot2)
+library(scales)
+load("/media/Data/Dropbox/Thèse/données propres/présidentielle 2012/P2012T1comm.Rdata")
+load("/media/Data/Dropbox/Thèse/données propres/fisc/FILO_DEC_AU2010.Rdata")
+load("/media/Data/Dropbox/Thèse/données propres/fisc/FILO_DEC_REG.Rdata")
+load("/media/Data/Dropbox/Thèse/données propres/fisc/FILO_DEC_METROPOLE.Rdata")
+detach("package:dplyr", unload = TRUE)
+library(dplyr)
+library(magrittr)
+
+pres2012comm %>%
+  group_by(CodeAU10) %>%
+  summarise(Abstention = sum(Abstentions) / sum(Inscrits) * 100,
+            `Le Pen` = sum(LePen) / sum(Inscrits) * 100,
+            Hollande = sum(Hollande) / sum(Inscrits) * 100,
+            Sarkozy = sum(Sarkozy) / sum(Inscrits) * 100,
+            Mélenchon = sum(Mélenchon) / sum(Inscrits) * 100,
+            Bayrou = sum(Bayrou) / sum(Inscrits) * 100,
+            Inscrits = sum(Inscrits)) %>%
+  left_join(FILO_DEC_AU2010_ENSEMBLE, by = c("CodeAU10" = "CODGEO")) %>%
+  mutate(color = ifelse(CodeAU10 %in% "003", "red", "white")) %>%
+  gather(key = candidat, value = vote, Abstention:Bayrou) %>%
+  ggplot(aes(x = S80S2012, y = vote)) +
+  geom_point(aes(size = Inscrits, fill = color, color = color)) +
+  scale_size_area(max_size = 10) +
+  scale_fill_manual(values = c("white" = "white", "red" = "red"), guide = FALSE) +
+  scale_colour_manual(values = c("white" = "black", "red" = "red"), guide = FALSE) +
+  scale_x_log10(breaks = trans_breaks("log10", function(x) 10^x),
+                labels = trans_format("log10", math_format(10^.x))) +
+  geom_smooth(method = "lm") +
+  theme_bw() +
+  annotation_logticks(sides = "b") +
+  xlab("Rapport interquartile (échelle logarithmique)") +
+  ylab("Vote (en % des inscrits)") +
+  theme(legend.justification = c(0, 1), legend.position = c(0, 1)) +
+  facet_wrap(~ candidat, scales = "free_y", shrink = TRUE, ncol = 2)
+
+```
+
+
+## Données électorales
+
+Cette étude s'appuie sur l'élection présidentielle de 2012. Le scrutin présidentiel constitue une élection de haute intensité électorale, ce qui évite que l'abstention n'interfère trop dans la relation entre les résultats électoraux et les variables explicatives. De plus, l'offre politique représentée y est large sans être pléthorique. Elle constitue donc un terrain privilégié d'analyse des rapports entre comportements électoraux et société. 
+
+Intérêt supplémentaire, les résultats de l'élection présidentielle de 2012 sont disponibles par bureau de vote, et le découpage des bureaux de vote des villes de plus de 100 000 habitants sont disponibles grâce au projet Cartelec \citep{colange_base_2013,beauguitte_cartelec_2013}. On peut en donc en mener l'analyse à un niveau géographique fin. Dans cette étude, les résultats électoraux sont saisis à l'échelle communale, et à l'échelle du bureau de vote à Aix-en-Provence et à Marseille. Au total, ce sont 653 individus statistiques dont on dispose. 
+
+Sont pris en compte dans cette étude l'abstention et les résultats obtenus par les cinq principaux candidats au premier tour : François Hollande (PS), Nicolas Sarkozy (UMP), Marine Le Pen (FN), Jean-Luc Mélenchon (Front de gauche) et François Bayrou (Modem). Les résultats sont rapportés aux inscrits, afin de considérer l'abstention comme une option électorale parmi d'autres, et afin qu'elle ne distorde pas les résultats. 
+
+La figure 2 présente les résultats obtenus par ces candidats au sein de l'AMM et les compare à la région PACA et au pays. Les figures 3, 3bis et 3ter cartographient quant à elle la répartition spatiale de ces résultats électoraux, à l'échelle de l'AMM ainsi que des deux principales communes de cette aire métropolitaine, Aix-en-Provence et Marseille. Les mêmes couleurs sont utilisées sur les trois ensembles de cartes afin qu'elles puissent être comparées. 
+
+```{r resultats, fig.cap="L'élection présidentielle de 2012 dans l'aire métropolitaine marseillaise, la région PACA et la France métropolitaine. Sources : ministère de l'intérieur, calculs et réalisation Joël Gombin.", fig.width=6.5, fig.height=5}
+
+resultats <- data_frame(niveau = factor(c("AMM", "PACA", "France"), levels = c("AMM", "PACA", "France")))
+
+resultats[, c("Abstention", "Hollande", "Sarkozy", "Le Pen", "Mélenchon", "Bayrou")] <- rbind(pres2012comm %>%
+                                                                                                filter(CodeAU10 %in% "003") %>%
+                                                                                                summarise(Abstention = sum(Abstentions) / sum(Inscrits) * 100,
+                                                                                                          Hollande = sum(Hollande) / sum(Inscrits) * 100,
+                                                                                                          Sarkozy = sum(Sarkozy) / sum(Inscrits) * 100,
+                                                                                                          `Le Pen` = sum(LePen) / sum(Inscrits) * 100,
+                                                                                                          Mélenchon = sum(Mélenchon) / sum(Inscrits) * 100,
+                                                                                                          Bayrou = sum(Bayrou) / sum(Inscrits) * 100),
+                                                                                              pres2012comm %>%
+                                                                                                filter(CodeDpt %in% c("04", "05", "06", "13", "83", "84")) %>%
+                                                                                                summarise(Abstention = sum(Abstentions) / sum(Inscrits) * 100,
+                                                                                                          Hollande = sum(Hollande) / sum(Inscrits) * 100,
+                                                                                                          Sarkozy = sum(Sarkozy) / sum(Inscrits) * 100,
+                                                                                                          `Le Pen` = sum(LePen) / sum(Inscrits) * 100,
+                                                                                                          Mélenchon = sum(Mélenchon) / sum(Inscrits) * 100,
+                                                                                                          Bayrou = sum(Bayrou) / sum(Inscrits) * 100),
+                                                                                              pres2012comm %>%
+                                                                                                summarise(Abstention = sum(Abstentions) / sum(Inscrits) * 100,
+                                                                                                          Hollande = sum(Hollande) / sum(Inscrits) * 100,
+                                                                                                          Sarkozy = sum(Sarkozy) / sum(Inscrits) * 100,
+                                                                                                          `Le Pen` = sum(LePen) / sum(Inscrits) * 100,
+                                                                                                          Mélenchon = sum(Mélenchon) / sum(Inscrits) * 100,
+                                                                                                          Bayrou = sum(Bayrou) / sum(Inscrits) * 100)
+                                                                                                )
+resultats$S80S2012 <- c(FILO_DEC_AU2010_ENSEMBLE %>% filter(CODGEO %in% "003") %>% extract2("S80S2012"), 
+                        FILO_DEC_REG_ENSEMBLE %>% filter(CODGEO %in% "93") %>% extract2("S80S2012"),
+                        FILO_DEC_METROPOLE_ENSEMBLE %>% extract2("S80S2012"))
+resultats$RD <- c(FILO_DEC_AU2010_ENSEMBLE %>% filter(CODGEO %in% "003") %>% extract2("RD"), 
+                        FILO_DEC_REG_ENSEMBLE %>% filter(CODGEO %in% "93") %>% extract2("RD"),
+                        FILO_DEC_METROPOLE_ENSEMBLE %>% extract2("RD"))
+resultats$GI12 <- c(FILO_DEC_AU2010_ENSEMBLE %>% filter(CODGEO %in% "003") %>% extract2("GI12"), 
+                        FILO_DEC_REG_ENSEMBLE %>% filter(CODGEO %in% "93") %>% extract2("GI12"),
+                        FILO_DEC_METROPOLE_ENSEMBLE %>% extract2("GI12"))
+names(resultats)[c(1, 8:10)] <- c(" ", "Rapport interquintile", "Rapport interdécile", "Coefficient de Gini")
+resultats %>%
+  gather(candidat, vote, Abstention:Bayrou) %>%
+  ggplot(aes(x = ` `, y = vote)) +
+  geom_bar(stat = 'identity', fill = 'lightgrey') +
+#  coord_flip() +
+  facet_wrap(~candidat, scales = "free_y", ncol = 3) +
+  theme_bw() +
+  xlab("") +
+  ylab("")
+```
+
+
+```{r cartesResultats, fig.cap="Résultats électoraux au sein de l'aire métropolitaine marseillaise. Sources : ministère de l'intérieur/Cartelec ; réalisation : Joël Gombin.", fig.width=6.5, fig.height=8}
+
+shp <- append_data(shp = PACA_BV12[substr(PACA_BV12@data$ID, 1, 5) %in% AMM,], data = df2012, key.shp = "ID", key.data = "CodeBV")
+tm_shape(shp) +
+  tm_fill(col = c("Abstentions.ins", "Hollande.ins", "Sarkozy.ins", "LePen.ins", "Mélenchon.ins", "Bayrou.ins"), palette = "Reds", n = 6, style = "quantile", text_separator = "à", text_less_than = "Moins de", text_or_more = "ou plus", title = c("Abstention", "Hollande", "Sarkozy", "Le Pen", "Mélenchon", "Bayrou"), textNA = NA) +
+  tm_borders(alpha = 0.5) +
+  tm_layout(legend.position = c("left", "bottom"), legend.text.size = 0.8, legend.title.size = 1, inner.margins = c(0.2, 0.02, 0.02, 0.02))
+
+```
+
+
+```{r cartesResultatsBis, fig.cap="Résultats électoraux à Marseille, par bureau de vote. Sources : ministère de l'intérieur/Cartelec ; réalisation : Joël Gombin.", fig.width=6.5, fig.height=8}
+library(maptools)
+shpMrs <- unionSpatialPolygons(PACA_BV12[substr(PACA_BV12@data$ID, 1, 3) %in% "132",], IDs = rep(1, length(PACA_BV12[substr(PACA_BV12@data$ID, 1, 3) %in% "132",])))
+outerRings <- Filter(function(f){f@ringDir==1},shpMrs@polygons[[1]]@Polygons)
+shpMrs <- SpatialPolygons(list(Polygons(outerRings,ID=1)))
+
+tm_shape(shp, xlim = bbox(shpMrs)["x",], ylim = bbox(shpMrs)["y",]) +
+  tm_borders() +
+  tm_fill(col = c("Abstentions.ins", "Hollande.ins", "Sarkozy.ins", "LePen.ins", "Mélenchon.ins", "Bayrou.ins"), palette = "Reds", n = 6, style = "quantile", text_separator = "à", text_less_than = "Moins de", text_or_more = "ou plus", title = c("Abstention", "Hollande", "Sarkozy", "Le Pen", "Mélenchon", "Bayrou"), textNA = NA) +
+tm_shape(shpMrs) +
+  tm_borders(lwd = 3, col = "black") +
+  tm_layout(legend.position = c("left", "bottom"), legend.text.size = 0.8, legend.title.size = 1)
+
+```
+
+
+```{r cartesResultatsTer, fig.cap="Résultats électoraux à Aix-en-Provence, par bureau de vote. Sources : ministère de l'intérieur/Cartelec ; réalisation : Joël Gombin.", fig.width=6.5, fig.height=8}
+
+shpAix <- unionSpatialPolygons(PACA_BV12[substr(PACA_BV12@data$ID, 1, 5) %in% "13001",], IDs = rep(1, length(PACA_BV12[substr(PACA_BV12@data$ID, 1, 5) %in% "13001",])))
+outerRings <- Filter(function(f){f@ringDir==1},shpAix@polygons[[1]]@Polygons)
+shpAix <- SpatialPolygons(list(Polygons(outerRings,ID=1)))
+
+tm_shape(shp, xlim = bbox(shpAix)["x",], ylim = bbox(shpAix)["y",]) +
+  tm_fill(col = c("Abstentions.ins", "Hollande.ins", "Sarkozy.ins", "LePen.ins", "Mélenchon.ins", "Bayrou.ins"), palette = "Reds", n = 6, style = "quantile", text_separator = "à", text_less_than = "Moins de", text_or_more = "ou plus", title = c("Abstention", "Hollande", "Sarkozy", "Le Pen", "Mélenchon", "Bayrou"), textNA = NA) +
+  tm_borders() +
+tm_shape(shpAix) +
+  tm_borders(lwd = 3, col = "black") +
+  tm_layout(legend.position = c("left", "top"), legend.text.size = 0.8, legend.title.size = 1)
+
+```
+
+## Données sociodémographiques
+
+Les données sociodémographiques mobilisées dans cette communication sont de deux ordres. D'une part, il s'agit de « variables lourdes » classiques : catégories socioprofessionnelles (en huit positions -- malheureusement, cette donnée n'existe pas dans une nomenclature plus fine au niveau des IRIS) et niveau de diplôme pour les plus de 18 ans. Dans les deux cas, les données sont millésimées 2011 (le dernier millésime disponible), et on a distingué ces indicateurs par sexe^[Ces données ont été reconstituées à partir du fichier détail du recensement 2011 localisé aux cantons-ou-villes. En effet, les tableaux détaillés diffusés par l'INSEE ne permettent de distinguer le niveau de diplôme ou la catégorie socioprofessionnelle par sexe que pour les plus de 15 ans.].
+
+```{r descSocioDemo1, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
+library(Hmisc)
+library(htmlTable)
+library(pander)
+bind_rows(
+  cs1_sex_iris_rp2011 %>%
+    filter(str_sub(iris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, F_Agriculteurs:H_Retraités) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
+  dipl_sex_iris_rp2011 %>%
+    filter(str_sub(iris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, F_Bac_général:H_Sans_dipl) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur)
+) %>%
+  txtRound(2) %>% 
+  pander(caption = "Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.")
+#   htmlTable(header = c("Moyenne", "Écart-type"),
+#             rnames = str_replace_all(str_sub(tmp$categorie, 3, -1), "_", " "),
+#             rgroup = c("CSP -- femmes", "CSP -- hommes", "Diplôme -- femmes", "Diplôme -- hommes"),
+#             n.rgroup = c(8, 8, 9, 9),
+#             ctable = TRUE)
+```
+
+D'autre part, plusieurs variables sont utilisées pour mesurer la précarité sociale :
+
+* le statut d'activité
+* le travail à temps partiel ou à temps complet
+* le type de contrat de travail
+* le taux de bénéficiaires du RSA 
+
+Ces données sont issues du recensement, millésime 2011, et sont disponibles à l'IRIS^[« Îlots regroupés pour l'information statistique », il s'agit de la brique de base de diffusion des données de l'INSEE.], pour les IRIS comportant plus de 200 habitants (à la commune, dans le cas contraire). 
+
+```{r descSocioDemo2, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de précarité sociale. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
+
+tmp <- bind_rows(
+  act_sex_iris_rp2011 %>%
+    filter(str_sub(iris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, F_Actifs_employés:H_Retraités) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
+  act_tp_sex_iris_rp2011 %>%
+    filter(str_sub(iris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, F_Sans_objet:`H_Temps partiel`) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
+  act_empl_sex_iris_rp2011 %>%
+    filter(str_sub(iris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, F_Aides_familiaux:H_Stagiaire) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = weighted.mean(., w = total, na.rm = TRUE),
+                        `écart-type` = sqrt(wtd.var(., w = total, na.rm = TRUE))), valeur),
+  df_cnaf %>%
+    filter(str_sub(ID, 1, 5) %in% AMM) %>%
+    summarise(categorie = "RSA",
+              moyenne = weighted.mean(RSA, w = pop, na.rm = TRUE),
+              `écart-type` = sqrt(wtd.var(RSA, w = pop, na.rm = TRUE)))
+) %>%
+  txtRound(2)
+tmp[, -1] %>% 
+  htmlTable(header = c("Moyenne", "Écart-type"),
+            rnames = c(str_replace_all(str_sub(tmp$categorie[-39], 3, -1), "_", " "), "RSA"),
+            rgroup = c("Statut d'activité -- femmes", "Statut d'activité -- hommes", "Temps de travail -- femmes", "Temps de travail -- hommes", "Forme d'emploi -- femmes", "Forme d'emploi -- hommes", "RSA"),
+            n.rgroup = c(6, 6, 3, 3, 10, 10, 1),
+            ctable = TRUE)
+```
+
+
+## Données sur les revenus et les inégalités
+
+Le niveau de revenu d'un territoire est mesuré à travers le revenu médian par unité de consommation^[Les unités de consommation permettent de standardiser le revenu total d'un ménage en tenant compte du nombre d'adultes et d'enfants du ménage.]. Les inégalités sont appréhendés au moyen de cinq indicateurs : 
+
+* l'écart interquartile
+* le rapport interdécile
+* l'écart-type
+* l'indice de Gini.
+
+Tous sont mesurés sur le revenu fiscal déclaré par ménage. L'ensemble de ces indicateurs est millésimé 2011 et est issu du dispositif « Revenus fiscaux localisés », établi à partir de l'analyse des déclaratations de revenu aux services fiscaux. Il n'existe pas à notre connaissance de raison théorique d'utiliser l'un plutôt que l'autre de ces indicateurs, c'est pourquoi nous testons ici la pertinence de chacun d'entre eux. 
+
+```{r descRevenus, results='asis', fig.cap="Moyenne et écarts-types des indicateurs de revenu et d'inégalités. Source : RP 2011/INSEE. Calculs : Joël Gombin.", eval=FALSE}
+
+RFDU2011iris %>%
+    filter(str_sub(CodeIris, 1, 5) %in% AMM) %>%
+    gather(categorie, valeur, RFUCQ211, RFUCIQ11, RFUCRD11, RFUCET11, RFUCGI11) %>%
+    group_by(categorie) %>%
+    summarise_each(funs(moyenne = mean(., na.rm = TRUE),
+                        `écart-type` = sd(., na.rm = TRUE)), valeur)
+
+```
+
+
+
+## Maille territoriale
+
+# Résultats 
+
+# Discussion
+
+
+
+# Références
+
+\printbibliography
