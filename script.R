@@ -5,15 +5,16 @@ library(rgdal)
 library(rgeos)
 library(gdata)
 library(stringr)
+source("/media/Data/Dropbox/Thèse/données propres/scripts et fonctions/ventiler.R")
 load("/media/Data/Dropbox/Thèse/données propres/présidentielle 2012/P2012BV.Rdata")
 load("/media/Data/Dropbox/Thèse/données propres/identification/communes_ident.Rdata")
 AMM <- communes_ident[communes_ident$CodeAU10 %in% "003", "CodeInsee"]
 
-# CSP (par sexe)
+# CSP 8 positions (par sexe)
 
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_POP.Rdata")
-RP_2011_IRIS_POP <- RP_2011_IRIS_POP %>%
-  mutate_each(funs(. / C11_POP15P * 100), matches("C11_[HF]{1}15P_CS[1-8]{1}"))
+load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_CS1_P18ANS.Rdata")
+cs1_sex_iris_rp2011 <- cs1_sex_iris_rp2011 %>%
+  mutate_each(funs(. / total * 100), F_Agriculteurs:H_Retraités)
 
 # niveau de diplôme
 
@@ -22,6 +23,7 @@ dipl_sex_iris_rp2011 <- dipl_sex_iris_rp2011 %>%
   mutate_each(funs = funs(. / total * 100), F_Bac_général:H_Sans_dipl)
 
 # niveau et composition des revenus
+# on utilise les données 2011 car Filosofi n'est disponible pour l'instant qu'à l'échelle des communes
 
 load("/media/Data/Dropbox/Thèse/données propres/fisc/RFDUiris20012011.Rdata")
 load("/media/Data/Dropbox/Thèse/données propres/fisc/RFDUcomm20012011.Rdata")
@@ -70,7 +72,11 @@ pop <- RP_2011_IRIS_LOG %>%
   filter(COM %in% sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`))) %>%
   group_by(COM) %>%
   summarise(pop = sum(P11_RP))
-df_commune <- cnaf_com$`RSA f` / pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "pop"] * 100
+df_commune <- cnaf_com$`RSA p` / pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "pop"] * 100
+
+df_cnaf <- data.frame(ID = c(RP_2011_IRIS_LOG[match(cnaf$CodeIris, RP_2011_IRIS_LOG$IRIS), "IRIS"], paste0(magrittr::extract2(pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "COM"], "COM"), "0000")), 
+                      RSA = c(df_iris, df_commune$pop),
+                      pop = c(RP_2011_IRIS_LOG[match(cnaf$CodeIris, RP_2011_IRIS_LOG$IRIS), "P11_RP"], magrittr::extract2(pop[match(sprintf("%05.0f", as.integer(cnaf_com$`Code Commune`)), pop$COM), "pop"], "pop")))
 
 # dispatchage des données électorales sur les IRIS
 
@@ -126,3 +132,5 @@ valeursAix <- valeursAix %>%
   select(-arriveeID)
 
 P2012AMM <- bind_rows(df1, df2, valeursMarseille, valeursAix)
+
+
