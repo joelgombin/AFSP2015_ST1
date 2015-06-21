@@ -30,7 +30,8 @@ opts_chunk$set(cache = TRUE,
                fig.path = 'figure/',
                cache.path = 'cache/',
                dev = 'cairo_pdf', 
-               dev.args = list(family = 'Times New Roman'))
+               dev.args = list(family = 'Times New Roman'),
+               fig.pos = "htbp")
 dep_auto()
 options(digits = 2)
 #options(OutDec = ',')
@@ -81,7 +82,7 @@ $H_3$ : *Les territoires marqués par les inégalités les plus fortes sont cara
 
 $H_4$ : *Ce sont en particulier les électeurs des classes populaires et intermédiaires (ouvriers, employés, professions intermédiaires) qui, dans les territoires marqués par les inégalités les plus élevées, voient leur comportement le plus fortement affecté*. En effet, un niveau élevé d'inégalités accroît la distance sociale, objective et subjective, entre les groupes sociaux les plus dominés et ceux dominants. Dès lors, la capacité à se considérer comme étant inclus dans le fonctionnement du système politique, économique et social décroît, et le vote en faveur de Marine Le Pen peut être une manifestation de cette exclusion subjective.
 
-$H_5$ *Les effets électoraux des inégalités s'exercent à un niveau meso plutôt qu'à un niveau micro*. Ainsi, ce ne sont pas dans les IRIS les plus marqués par les inégalités que les effets électoraux décrits dans les hypothèses $H_2$ et $H_3$ s'observent le plus, mais dans les IRIS caractérisés par un fort poids des groupes sociaux mentionnés dans l'hypothèse $H_4$, dans des territoires caractérisés par un fort niveau d'inégalité. On peut imaginer trois explications potentiellement cumulatives. D'une part, la distribution des groupes sociaux (et des ressources) dans l'espace s'organise à l'échelle des aires urbaines, voire des métropoles, ce sont donc les inégalités à cette échelle qu'il faut considérer, alors qu'au niveau micro les inégalités sont souvent faibles, du fait de la tendance au « séparatisme social » \citep{maurin_ghetto_2004}. D'autre part, les mobilités quotidiennes (pour le travail mais aussi pour l'éducation, la consommation, etc.) s'effectuant dans une large mesure à cette échelle meso, elles conduisent à la mise en présence de groupes fortement inégaux et ppeuvent donner lieu à des interactions politiquement significatives. Enfin, un certain nombre de marchés locaux s'organisent également à cette échelle meso ; or, les effets électoraux des inégalités s'exercent sans doute, entre autres, au travers du marché. 
+<!-- regular html comment  $H_5$ *Les effets électoraux des inégalités s'exercent à un niveau meso plutôt qu'à un niveau micro*. Ainsi, ce ne sont pas dans les IRIS les plus marqués par les inégalités que les effets électoraux décrits dans les hypothèses $H_2$ et $H_3$ s'observent le plus, mais dans les IRIS caractérisés par un fort poids des groupes sociaux mentionnés dans l'hypothèse $H_4$, dans des territoires caractérisés par un fort niveau d'inégalité. On peut imaginer trois explications potentiellement cumulatives. D'une part, la distribution des groupes sociaux (et des ressources) dans l'espace s'organise à l'échelle des aires urbaines, voire des métropoles, ce sont donc les inégalités à cette échelle qu'il faut considérer, alors qu'au niveau micro les inégalités sont souvent faibles, du fait de la tendance au « séparatisme social » \citep{maurin_ghetto_2004}. D'autre part, les mobilités quotidiennes (pour le travail mais aussi pour l'éducation, la consommation, etc.) s'effectuant dans une large mesure à cette échelle meso, elles conduisent à la mise en présence de groupes fortement inégaux et ppeuvent donner lieu à des interactions politiquement significatives. Enfin, un certain nombre de marchés locaux s'organisent également à cette échelle meso ; or, les effets électoraux des inégalités s'exercent sans doute, entre autres, au travers du marché.  -->
 
 
 # Données et méthodes
@@ -239,10 +240,12 @@ tm_shape(shpAix) +
 
 ## Données sociodémographiques
 
-Les données sociodémographiques mobilisées dans cette communication sont de deux ordres. D'une part, il s'agit de « variables lourdes » classiques : catégories socioprofessionnelles (en huit positions -- malheureusement, cette donnée n'existe pas dans une nomenclature plus fine au niveau des IRIS) et niveau de diplôme pour les plus de 18 ans. Dans les deux cas, les données sont millésimées 2011 (le dernier millésime disponible), et on a distingué ces indicateurs par sexe^[Ces données ont été reconstituées à partir du fichier détail du recensement 2011 localisé aux cantons-ou-villes. En effet, les tableaux détaillés diffusés par l'INSEE ne permettent de distinguer le niveau de diplôme ou la catégorie socioprofessionnelle par sexe que pour les plus de 15 ans.].
+Les données sociodémographiques mobilisées dans cette communication sont de deux ordres. D'une part, il s'agit de \enquote{variables lourdes} classiques : catégories socioprofessionnelles (en huit positions -- malheureusement, cette donnée n'existe pas dans une nomenclature plus fine au niveau des IRIS) et niveau de diplôme pour les plus de 18 ans. Dans les deux cas, les données sont millésimées 2011 (le dernier millésime disponible), et on a distingué ces indicateurs par sexe^[Ces données ont été reconstituées à partir du fichier détail du recensement 2011 localisé aux cantons-ou-villes. En effet, les tableaux détaillés diffusés par l'INSEE ne permettent de distinguer le niveau de diplôme ou la catégorie socioprofessionnelle par sexe que pour les plus de 15 ans.].
 
 ```{r descSocioDemo1, results='asis',tidy=FALSE}
 library(xtable)
+library(Hmisc)
+library(htmlTable)
 tmp <- bind_rows(
   cs1_sex_iris_rp2011 %>%
     filter(str_sub(iris, 1, 5) %in% AMM) %>%
@@ -281,7 +284,8 @@ tmp %>%
                include.rownames = FALSE,
                sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
                booktabs = TRUE,
-               comment = FALSE)
+               comment = FALSE,
+               table.placement = "htbp")
 
 ```
 
@@ -341,7 +345,8 @@ tmp %>%
                include.rownames = FALSE,
                booktabs = TRUE,
                sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
-               comment = FALSE)
+               comment = FALSE,
+               table.placement = "htbp")
 ```
 
 
@@ -358,13 +363,66 @@ Tous sont mesurés sur le revenu fiscal déclaré par ménage. L'ensemble de ces
 
 ```{r descRevenus, results='asis'}
 
-tmp <- RFDU2011iris %>%
-    filter(str_sub(CodeIris, 1, 5) %in% AMM) %>%
-    gather(categorie, valeur, RFUCMO11, RFUCQ211, RFUCIQ11, RFUCRD11, RFUCET11, RFUCGI11) %>%
+library(lazyeval)
+liste_iris <- unique(
+                c(extract2(cs1_sex_iris_rp2011 %>% filter(str_sub(iris, 1, 5) %in% AMM) %>% filter(!str_sub(iris, 6, 9) %in% "XXXX"), "iris"),
+                  extract2(RFDU2011iris %>% filter(str_sub(CodeIris, 1, 5) %in% AMM), "CodeIris"))
+)
+
+renomme_ <- function(x, vars, prefix) {
+  noms <- x %>% select_(vars) %>% names
+  names(x)[match(noms, names(x))] <- paste0(prefix, noms)
+  x
+}
+
+renomme <- function(x, vars, prefix) {
+  renomme_(x, lazy(vars), prefix)
+}
+
+df_acp <- bind_cols(
+          cs1_sex_iris_rp2011[match(liste_iris, cs1_sex_iris_rp2011$iris), ] %>% 
+            select(F_Agriculteurs:H_Retraités) %>%
+            renomme(F_Agriculteurs:H_Retraités, "CS_"), 
+          dipl_sex_iris_rp2011[match(liste_iris, dipl_sex_iris_rp2011$iris), ] %>% 
+            select(F_Bac_général:H_Sans_dipl) %>%
+            renomme(F_Bac_général:H_Sans_dipl, "Dipl_"),
+          act_sex_iris_rp2011[match(liste_iris, act_sex_iris_rp2011$iris), ] %>%
+            select(F_Actifs_employés:H_Retraités) %>%
+            renomme(F_Actifs_employés:H_Retraités, "Act_"),
+          act_tp_sex_iris_rp2011[match(liste_iris, act_tp_sex_iris_rp2011$iris), ] %>%
+            select(F_Sans_objet:`H_Temps partiel`) %>%
+            renomme(F_Sans_objet:`H_Temps partiel`, "Temps_"),
+          act_empl_sex_iris_rp2011[match(liste_iris, act_empl_sex_iris_rp2011$iris), ] %>%
+            select(F_Aides_familiaux:H_Stagiaire) %>%
+            renomme(F_Aides_familiaux:H_Stagiaire, "Statut_"),
+          df_cnaf[match(liste_iris, as.character(df_cnaf$ID)), ] %>% select(RSA),
+          RFDU2011iris[match(liste_iris, RFDU2011iris$CodeIris), -7] %>%
+            select(Médiane = RFUCQ211, 
+                   `Écart inter-quartile` = RFUCIQ11,
+                   `Rapport interdécile` = RFUCRD11,
+                   `Écart-type` = RFUCET11,
+                   Gini = RFUCGI11)
+) %>%
+  as.data.frame
+# imputation de la commune à l'IRIS lorsque donnée manquante
+indice <- liste_iris[is.na(df_acp$Médiane)] 
+df_acp[is.na(df_acp$Médiane), c("Médiane", "Écart inter-quartile", "Rapport interdécile", "Écart-type", "Gini")] <- as.data.frame(RFDU2011iris[match(paste0(substr(indice, 1, 5), "0000"), RFDU2011iris$CodeIris), c("RFUCQ211", "RFUCIQ11", "RFUCRD11", "RFUCET11",  "RFUCGI11")])
+
+indice2 <- liste_iris[which(is.na(df_acp$`Rapport interdécile`))]
+indice3 <- which(is.na(df_acp$`Rapport interdécile`))
+df_acp[indice3, c("Écart inter-quartile", "Rapport interdécile", "Écart-type", "Gini")] <- as.data.frame(RFDU2011iris[match(paste0(substr(indice2, 1, 5), "0000"), RFDU2011iris$CodeIris), c("RFUCIQ11", "RFUCRD11", "RFUCET11",  "RFUCGI11")])
+# Marseille
+df_acp[indice3[which(substr(indice2, 1, 3) %in% "132")], c("Écart inter-quartile", "Rapport interdécile", "Écart-type", "Gini")] <- as.data.frame(RFDU2011iris[RFDU2011iris$CodeIris %in% "130550000", c("RFUCRD11", "RFUCET11", "RFUCMO11", "RFUCGI11")])
+
+
+
+
+tmp <- df_acp %>%
+    slice(which(liste_iris %in% irisAMM@data$DCOMIRIS)) %>%
+    gather(categorie, valeur, Médiane:Gini) %>%
     group_by(categorie) %>%
     summarise_each(funs(moyenne = mean(., na.rm = TRUE),
                         `écart-type` = sd(., na.rm = TRUE)), valeur)
-tmp$categorie <- c("Revenu médian", "Revenu moyen", "Écart inter-quartile", "Rapport interdécile", "Écart-type", "Indice de Gini")
 names(tmp)[1] <- "Catégorie"
 tmp %>%
   xtable(caption = "Tendances centrales et dispersion des revenus par unité de consommation dans l'AMM. Source : RFLM 2011/DGFiP/INSEE. Calculs : Joël Gombin.",
@@ -374,34 +432,149 @@ tmp %>%
                include.rownames = FALSE,
                booktabs = TRUE,
                sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
-               comment = FALSE)
+               comment = FALSE,
+               table.placement = "htbp")
 
 ```
 
+De plus, les différents indicateurs de dispersion ou d'inégalité des revenus ne sont que très faiblement corrélés entre eux (voir tableau \ref{table4}), ce qui laisse supposer qu'ils correspondent à des dimensions différentes des inégalités de revenu.  
+
 ```{r corrRevenus, results='asis'}
-RFDU2011iris %>%
-  filter(str_sub(CodeIris, 1, 5) %in% AMM) %>%
-  transmute(`Revenu médian` = RFUCQ211, `Revenu moyen` = RFUCMO11, `Écart inter-quartile` = RFUCIQ11, `Rapport interdécile` = RFUCRD11, `Écart-type` = RFUCET11, `Indice de Gini` = RFUCGI11) %>%
+df_acp %>%
+  slice(which(liste_iris %in% irisAMM@data$DCOMIRIS)) %>%
+  select(Médiane:Gini) %>%
   cor(use = "pairwise") %>%
   xtable(caption = "Corrélation entre les indicateurs de tendances centrales et de dispersion des revenus par unité de consommation dans l'AMM. Source : RFLM 2011/DGFiP/INSEE. Calculs : Joël Gombin.",
          label = "table4",
-         align = "ldddddd") %>%
+         align = "lddddd") %>%
   print.xtable(file = "",
                include.rownames = TRUE,
                size = "\\footnotesize",
                booktabs = TRUE,
                comment = FALSE,
                sanitize.colnames.function = function(x) paste0("\\multicolumn{1}{c}{",x,"}"),
-               scalebox = 0.8)
+#               scalebox = 0.8,
+               table.placement = "htbp")
 
 
 ```
 
+
+```{r cartoInegalites, fig.cap="Médiane et dispersion des revenus par unité de consommation dans l'AMM. Sources : RFLM 2011/DGFiP/INSEE et IGN ; réalisation : Joël Gombin.", fig.width=6.5, fig.height=8.5}
+
+df_acp$ID <- liste_iris
+
+shp <- append_data(shp = irisAMM, data = df_acp, key.shp = "DCOMIRIS", key.data = "ID")
+tm_shape(shp) +
+  tm_fill(col = c("Médiane", "Écart inter-quartile", "Rapport interdécile", "Écart-type", "Gini"), palette = "Reds", n = 6, style = "quantile", text_separator = "à", text_less_than = "Moins de", text_or_more = "ou plus", textNA = "ND") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(legend.position = c("left", "bottom"), legend.text.size = 0.8, legend.title.size = 1, inner.margins = c(0.25, 0.02, 0.02, 0.02), legend.digits = 2)
+
+df_acp <- df_acp[, - which(names(df_acp) %in% "ID")]
+
+```
+
+
+Une analyse en composantes principales permet de mieux appréhender l'articulation entre ces divers indicateurs^[Les variables actives sont celles portant sur le statut d'activité, le temps et le statut de travail, ainsi que la proportion de bénéficiaires du RSA. Les autres variables sont projetées en variables supplémentaires.]. Une première composante principale concentre plus d'un quart de la variance totale ; elle correspond à l'insertion sociale : elle oppose ainsi les IRIS dans lesquels les inactifs et les actifs sans emploi sont les plus nombreux à ceux caractérisés par une proportion importante d'actifs employés à temps complet et en CDI. On notera que, sans surprise, le revenu médian est corrélé à une forte insertion sociale tandis que l'indice de Gini est lui plus élevé dans les IRIS dans lesquels les désinsérés socialement sont les plus nombreux. On voit ainsi que les inégalités de revenu telles qu'elles sont mesurées par l'indice de Gini sont surtout tirées par le bas de la distribution. La deuxième dimension principale (qui porte moins de 10 % de la variance totale) correspond principalement au poids des retraités, opposés aux actifs et en particulier les ouvriers et employés. Le cercle des corrélations (figure \ref{fig:acp}) permet de visualiser ce premier plan principal.  
+
+
+
+```{r acp, fig.width=12, fig.height=9, fig.cap="Premier plan principal d'une analyse en composantes principales menée sur les indicateurs sociodémographiques, de précarité sociale et de revenu au sein de l'Aire métropolitaine marseillaise. Les variables illustratives figurent en bleu. Sources : RP 2011 INSEE et RFLM 2011 DGFiP-INSEE. Réalisation : Joël Gombin.", out.extra='angle=90', fig.align='center', out.width='\\linewidth'}
+library(FactoMineR)
+acp <- PCA(df_acp, graph = FALSE, quanti.sup = c(1:34, 74:78))
+
+plot.PCA(acp, choix = "var", select = "cos2 20", autoLab = "no", title = "")
+```
+
+La figure \ref{fig:carteAcp} permet de visualiser la spatialisation de ces deux dimensions principales. Les IRIS les plus marqués par la précarité et la désinsertion sociale sont fortement concentrés dans la moitié nord de la ville de Marseille, ainsi que dans quelques IRIS d'Aix-en-Provence, de Port-de-Bouc ou d'Aubagne, notamment. On retrouve là une géographie bien connue des fragilités sociales dans la métropole marseillaise \citep{conseilregionalprovence-alpes-cotedazur_metropole_2013a}. Moins connue est la géographie qui oppose des actifs plutôt situés autour de l'étang de Berre, dans le sud du pays d'Aix et dans les centres des deux villes principales, aux retraités surreprésentés dans la moitié nord-ouest de la métropole ainsi que sur la Côte bleue.
+
+```{r carteAcp, fig.width=6.5, fig.height=9, fig.cap="Cartographie des première et deuxième composantes principales de l'ACP. Sources : RP 2011 INSEE, RFLM 2011 DGFiP-INSEE et IGN. Calculs et réalisation : Joël Gombin.", fig.align='center', results='hide'}
+coords <- as.data.frame(acp$ind$coord)
+coords$IRIS <- liste_iris
+
+shp <- append_data(shp = irisAMM, data = coords, key.shp = "DCOMIRIS", key.data = "IRIS")
+tm_shape(shp, unit = "km") +
+  tm_fill(col = c("Dim.1", "Dim.2"), palette = "RdBu", n = 6, style = "quantile", text_separator = "à", text_less_than = "Moins de", text_or_more = "ou plus", title = paste0(c("Première", "Deuxième"), " composante principale"), textNA = NA, labels = list(c("Insertion", "", "", "", "", "Désinsertion"), c("Retraités", "", "", "", "", "Actifs"))) +
+  tm_borders(alpha = 0.5) +
+  tm_layout(legend.position = c("left", "bottom"), legend.text.size = 0.8, legend.title.size = 1, inner.margins = c(0.1, 0.02, 0.02, 0.02)) +
+  tm_scale_bar()
+
+```
+
+Ces deux dimensions sont ainsi utilisées par la suite pour résumer les variables actives concernées. Une seconde ACP est menée, cette fois-ci sur la catégorie-socioprofessionnelle et le niveau de diplôme. La première dimension oppose les ouvriers et les personnes sans diplôme (valeurs négatives) aux cadres supérieurs et personnes diplomées de l'enseignement supérieur (valeurs positives). La deuxième dimension oppose les inactifs, retraités, étudiants ou actifs sans emploi (valeurs négatives) aux actifs occupés, plutôt populaires, avec des niveaux de diplôme assez faibles (valeurs positives). Là encore, ces deux premières dimensions sont utilisées par la suite comme résumé de l'information. Cela permet de diminuer le nombre de variables indépendantes utilisées et d'éviter des problèmes de multicollinéarité entre les variables.
+
+```{r acp2}
+acp2 <- PCA(df_acp, graph = FALSE, quanti.sup = c(35:78))
+
+```
+
+
 ## Maille territoriale
+
+La maille territoriale utilisée est l'IRIS. Toutes les données sociodémographiques et de revenu utilisées sont disponibles à ce niveau. Les données électorales, à Aix-en-Provence et à Marseille, sont interpolées des bureaux de vote aux IRIS. Cette interpolation est effectuée en faisant une hypothèse d'équirépartition et d'homogénéité des électeurs au sein des bureaux de vote. Dans les autres communes divisées en plusieurs IRIS, les résultats électoraux mesurés au niveau de la commune sont imputés aux IRIS de cette commune. Au total, ce sont 724 IRIS qui constituent la base de données utilisée pour cette communication. Certains de ces IRIS ne sont pas, ou très peu, habités ; de sorte que les données ne sont complètes que pour 682 IRIS.
+
+## Méthode
+
+Afin de tester les hypothèses énoncées plus haut, on construit une série de modèles de régression linéaire, pour chacun des six comportements électoraux étudiés. Les variables indépendantes du modèle sont les mêmes pour chaque modèle : première et deuxième composantes de la première ACP (variables de précarité sociale), deuxième composante de la deuxième ACP (position sociale^[La première composante de la deuxième ACP n'a pas été incluse dans le modèle car elle génère un excès de multicollinéarité.]), revenu médian, écart interquartile, écart-type et indice de Gini des revenus.  Enfin, un effet d'interaction entre la deuxième composante de la deuxième ACP et une variable binaire, distinguant la moitié des IRIS dont l'indice de Gini est supérieur à la médiane, permet de tester l'hypothèse d'un effet différencié des variables lourdes selon le niveau d'inégalités.
+
+```{r modeles}
+library(texreg)
+coords_acp1 <- as.data.frame(acp$ind$coord)
+names(coords_acp1) <- paste0("DimACP1_", 1:5)
+coords_acp2 <- as.data.frame(acp2$ind$coord)
+names(coords_acp2) <- paste0("DimACP2_", 1:5)
+df_lm <- bind_cols(
+          coords_acp1,
+          coords_acp2,
+          df_acp %>% select(Médiane:Gini),
+          P2012AMM[match(liste_iris, P2012AMM$ID), ] %>%
+            mutate_each(funs(. / Inscrits * 100), Abstentions, Hollande, Sarkozy, LePen, Mélenchon, Bayrou)
+)
+
+modeles <- df_lm %>%
+  slice(1:726) %>% # pour éviter doublonnage IRIS/commune
+  mutate(`Rapport interdécile (log)` = log(`Rapport interdécile`),
+         inegalitesH = ifelse(Gini < 0.36, "inférieur", "supérieur")) %>%
+  gather(candidat, vote, Abstentions, Hollande, Sarkozy, LePen, Mélenchon, Bayrou) %>%
+  select(candidat, vote,
+         DimACP1_1:DimACP1_2,
+         DimACP2_1:DimACP2_2,
+         Médiane:Gini, `Rapport interdécile (log)`,
+         inegalitesH) %>%
+  group_by(candidat) %>%
+  do(modele = lm(vote ~ DimACP1_1 + DimACP1_2 + DimACP2_2 + 
+#  do(modele = lm(vote ~ DimACP1_1 + DimACP1_2 + DimACP2_1 + DimACP2_2 + 
+                   Médiane + `Écart inter-quartile` + `Écart-type` + Gini +
+                   inegalitesH:DimACP2_2,
+#                   Médiane + `Écart inter-quartile` + `Rapport interdécile (log)` + `Écart-type` + Gini +
+#                    `Écart inter-quartile` * DimACP1_1 + 
+#                    `Écart inter-quartile` * DimACP1_2 +
+#                    `Écart inter-quartile` * DimACP2_1 +
+#                    `Écart inter-quartile` * DimACP2_2, 
+                   data = .))
+
+```
+
 
 # Résultats 
 
-# Discussion
+L'estimation des modèles de régression est présentée dans le tableau \ref{tab:resReg}. Leur performance est satisfaisante (R^2 compris entre 0.60 et 0.76), à l'exception du modèle concernant le vote Mélenchon, dont le R^2 est nettement plus faible (0.23). 
+
+```{r resultatsReg, results='asis'}
+texreg(modeles$modele, custom.model.names = c("Abstention", "Hollande", "Sarkozy", "Le Pen", "Mélenchon", "Bayrou"), caption = "Modèles de régression du vote en 2012 dans l'AMM. Les unités statistiques sont les IRIS. Sources : Ministère de l'intérieur, Cartelec, RP 2011 INSEE, RFLM 2011 DGFiP-INSEE et IGN. Calculs et réalisation : Joël Gombin.", custom.coef.names = c("(Intercept)", "Désinsertion sociale", "Retraités (-)", "Autres inactifs (-)", "Revenu médian", "Écart interquartile des revenus", "Écart-type des revenus", "Indice de Gini des revenus", "Autres inactifs (-) x inégalités"), booktabs = TRUE, dcolumn = TRUE, use.packages = FALSE, float.pos = "htbp", label = "tab:resReg")
+
+```
+
+La première hypothèse est confirmée : les inégalités de revenu, quelle que soit l'indicateur qu'on retient pour les mesurer, exercent bien sur le vote un effet statistiquement distinct de celui des \enquote{variables lourdes} ainsi que du niveau médian des revenus.  Et pour chaque vote considéré, au moins l'un des indicateurs pris en compte possède un effet significatif. Cependant, ce ne sont pas les mêmes indicateurs qui apparaissent pertinents selon le comportement électoral considéré : chacune des trois mesures considérées possède un coefficient statistiquement significatif dans trois ou quatre cas. Lorsque les trois variables sont statistiquement significatives, comme c'est le cas pour le vote Sarkozy et pour le vote Le Pen, elles sont orientées dans le même sens. Dans le cas du vote Bayrou, cependant, deux indicateurs (l'écart interquartile et l'indice de Gini) sont statistiquement significatifs (au seuil de 5 %), mais avec des signes inverses. Toutefois, les coefficients sont faibles, indiquant des effets très limités. 
+
+La deuxième hypothèse est également confirmée : l'abstention est plus élevée lorsque les inégalités (en l'espèce, l'écart-type des revenus) sont plus élevées. Ceci étant, l'effet est très faible (environ 0.3 point de pourcentage lorsque l'écart-type des revenus augmente d'un écart-type), et le signe des autres indicateurs d'inégalité est négatif, bien que les coefficients ne soient pas statistiquement significatifs. Ici, les variables lourdes traditionnelles semblent jouer un rôle bien plus fondamental.
+
+La troisième hypothèse n'est que très partiellement confirmée. Comme nous l'anticipions, le vote en faveur de François Hollande est négativement corrélé aux inégalités de revenu (comme au niveau du revenu médian, d'ailleurs), avec un effet non-négligeable (-0.9 point de pourcentage lorsque l'écart interquartile des revenus augmente d'un écart-type). Cependant, le vote en faveur de Marine Le Pen, contrairement à notre hypothèse, est également négativement associé aux inégalités (-0.8 point lorsque le coefficient de Gini augmente d'un écart-type, -0.6 point lorsque l'écart-type des revenus augmente d'un écart-type). Ces résultats sont suprenants, mais s'expliquent peut-être mieux si l'on prend en considération l'autre résultat non attendu : la corrélation positive assez forte entre les inégalités et le vote Sarkozy (+1.6 point de pourcentage lorsque le coefficient de Gini augmente d'un écart-type). Les territoires riches et inégalitaires (inégalitaires parce que riches ?), en particulier dans le pays aixois et dans le sud de Marseille, auraient ainsi davantage voté pour Sarkozy, tandis que le vote pour Marine Le Pen serait plus important, en dehors de toute considération de niveau médian de revenu (le coefficient n'est pas significatif), dans les espaces marqués par le poids des inactifs (et actifs non occupés) hors retraités. Dans ces territoires, les inégalités seraient plutôt faibles car les revenus élevés y sont rares. Il convient en tout cas de retenir que les inégalités mesurées à des échelles différentes (entre différentes aires urbaines ou à l'intérieur d'une aire urbaine) ne sont pas corrélées de la même manière au vote. La question scalaire est donc ici essentielle. En effet, la mesure des inégalités ne correspond sans doute pas aux mêmes phénomènes aux différentes échelles : à l'échelle des aires urbaines, c'est le fonctionnement du système productif qui est reflété dans le niveau des inégalités. À l'intérieur d'une aire urbaine, c'est plutôt l'organisation spatiale des ségrégations sociales que ces indicateurs traduisent.
+
+La quatrième hypothèse est partiellement confirmée : pour le vote Le Pen, l'association statistique avec le poids des actifs des classes populaires est d'autant plus fort que les inégalités sont élevées. Pour l'abstention en revanche, le coefficient de l'effet d'interaction est d'un signe contraire à celui attendu. Enfin, pour les autres votes, il n'y a pas d'effet significatif. Pour pleinement vérifier l'hypothèse, il faudrait pouvoir travailler sur un plus grand nombre d'unités statistiques, potentiellement avec une modélisation multiniveau. 
+
+
+La présente communication suggère donc que les inégalités de revenu exercent une influence sur les comportements électoraux, indépendamment des variables lourdes classiques, mais que cette influence s'exerce d'une manière différente selon les échelles géographiques, et dans des interactions complexes avec d'autres facteurs mieux connus. Les opportunités ouvertes par la disponiblité de plus en plus grande de données, électorales, sociodémographiques ou relatives aux revenus, invite à prolonger et approfondir ces investigations, afin d'améliorer notre connaissance des rapports entre les inégalités et les comportements politiques. 
 
 
 

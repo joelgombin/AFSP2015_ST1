@@ -36,7 +36,9 @@ RFST2011com <- RFST2011com %>%
   mutate(iris = paste0(COM, "0000"))
 
 RFDU2011iris <- bind_rows(RFDUcomm %>% mutate(CodeIris = iris) %>% select(-(CodeInsee:RFUCGI10), -iris),
-                          RFDU2011iris)
+                          RFDU2011iris %>% mutate(CodeIris = as.character(CodeIris)))
+
+
 RFST2011iris <- bind_rows(RFST2011com %>% mutate(CodeIris = iris) %>% select(-(COM:LIBGEO), -X, -iris),
                           RFST2011iris %>% select(CodeIris, PMIMP11:PAUT11))
 
