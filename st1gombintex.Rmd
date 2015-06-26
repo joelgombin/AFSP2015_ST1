@@ -47,7 +47,7 @@ Ainsi que le rappelle l'appel à communication de la section thématique 1 du co
 entre insécurité sociale, particulièrement sous les formes renouvelées qu'elles prennent du fait des
 évolutions de la structure socio-économique française, et comportement électoral sont à la fois au
 centre de nombreux travaux scientifiques (mais aussi de débats sociaux) et en même temps
-relativement mal connues. Il s'agit pourtant d'un enjeu scientifique essentiel, tant la déconstruction
+relativement mal connues^[Le code source et les données de ce papier sont disponibles sur gihhub : [](https://github.com/joelgombin/AFSP2015_ST1).]. Il s'agit pourtant d'un enjeu scientifique essentiel, tant la déconstruction
 des cadres socioéconomiques constitutifs de la société fordiste mettent également à mal les modèles
 théoriques du vote qui s'appuyaient sur cette base. Il est donc important de mieux comprendre
 comment des situations -- qui peuvent d'ailleurs prendre des formes très diverses -- de précarité

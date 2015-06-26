@@ -1,0 +1,3 @@
+Ce répertoire héberge le code et les données de mon papier intitulé "Inégalités économiques, précarité sociale et vote. Le cas de l'Aire métropolitaine marseillaise" présenté dans le cadre de la Section thématique 1 ([Crise, insécurité sociale et comportements électoraux](http://www.congres-afsp.fr/st/st1.html)) du congrès 2015 de l'Association française de science politique. 
+
+Ce papier présente une recherche en cours et non achevée, merci de le mentionner si vous citez cette communication.
