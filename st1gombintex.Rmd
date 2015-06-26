@@ -39,7 +39,7 @@ options(digits = 2)
 ```
 
 ```{r init}
-source("./script.R")
+source("./scripts/script.R")
 ```
 
 
@@ -540,7 +540,8 @@ modeles <- df_lm %>%
          DimACP1_1:DimACP1_2,
          DimACP2_1:DimACP2_2,
          Médiane:Gini, `Rapport interdécile (log)`,
-         inegalitesH) %>%
+         inegalitesH) %T>% 
+  write.table("donnees_regression.csv", sep = ";", dec = ",", row.names = FALSE) %>%
   group_by(candidat) %>%
   do(modele = lm(vote ~ DimACP1_1 + DimACP1_2 + DimACP2_2 + 
 #  do(modele = lm(vote ~ DimACP1_1 + DimACP1_2 + DimACP2_1 + DimACP2_2 + 
