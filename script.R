@@ -5,30 +5,30 @@ library(rgdal)
 library(rgeos)
 library(gdata)
 library(stringr)
-source("/media/Data/Dropbox/Thèse/données propres/scripts et fonctions/ventiler.R")
-load("/media/Data/Dropbox/Thèse/données propres/présidentielle 2012/P2012BV.Rdata")
-load("/media/Data/Dropbox/Thèse/données propres/identification/communes_ident.Rdata")
+source("./scripts/ventiler.R")
+load("./data/P2012BV.Rdata")
+load("./data/communes_ident.Rdata")
 AMM <- communes_ident[communes_ident$CodeAU10 %in% "003", "CodeInsee"]
 
 # CSP 8 positions (par sexe)
 
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_CS1_P18ANS.Rdata")
+load("./data/RP_2011_IRIS_CS1_P18ANS.Rdata")
 cs1_sex_iris_rp2011 <- cs1_sex_iris_rp2011 %>%
   mutate_each(funs(. / total * 100), F_Agriculteurs:H_Retraités)
 
 # niveau de diplôme
 
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_DIP_P18ANS.Rdata")
+load("./data/RP_2011_IRIS_DIP_P18ANS.Rdata")
 dipl_sex_iris_rp2011 <- dipl_sex_iris_rp2011 %>%
   mutate_each(funs = funs(. / total * 100), F_Bac_général:H_Sans_dipl)
 
 # niveau et composition des revenus
 # on utilise les données 2011 car Filosofi n'est disponible pour l'instant qu'à l'échelle des communes
 
-load("/media/Data/Dropbox/Thèse/données propres/fisc/RFDUiris20012011.Rdata")
-load("/media/Data/Dropbox/Thèse/données propres/fisc/RFDUcomm20012011.Rdata")
-load("/media/Data/Dropbox/Thèse/données propres/fisc/RFSTiris20012011.Rdata")
-load("/media/Data/Dropbox/Thèse/données propres/fisc/RFSTcom20012011.Rdata")
+load("./data/RFDUiris20012011.Rdata")
+load("./data/RFDUcomm20012011.Rdata")
+load("./data/RFSTiris20012011.Rdata")
+load("./data/RFSTcom20012011.Rdata")
 
 RFDUcomm <- RFDUcomm %>%
   mutate(iris = paste0(CodeInsee, "0000"))
@@ -46,28 +46,28 @@ RFST2011iris <- bind_rows(RFST2011com %>% mutate(CodeIris = iris) %>% select(-(C
 
 ## activité pour les majeurs
 
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_ACT_P18ANS.Rdata")
+load("./data/RP_2011_IRIS_ACT_P18ANS.Rdata")
 act_sex_iris_rp2011 <- act_sex_iris_rp2011 %>%
   mutate_each(funs(. / total * 100), F_Actifs_employés:H_Retraités)
 
 ## temps partiel
 
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_ACT_TP_P18ANS.Rdata")
+load("./data/RP_2011_IRIS_ACT_TP_P18ANS.Rdata")
 act_tp_sex_iris_rp2011 <- act_tp_sex_iris_rp2011 %>%
   mutate_each(funs(. / total * 100), F_Sans_objet:`H_Temps partiel`)
 
 ## type de contrat
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_ACT_EMPL_P18ANS.Rdata")
+load("./data/RP_2011_IRIS_ACT_EMPL_P18ANS.Rdata")
 act_empl_sex_iris_rp2011 <- act_empl_sex_iris_rp2011 %>%
   mutate_each(funs(. / total * 100), F_Aides_familiaux:H_Stagiaire)
 
 ## CAF
-load("/media/Data/Dropbox/Thèse/données propres/RP2011/IRIS/RP_2011_IRIS_LOG.Rdata")
-cnaf <- read.xls("/media/Data/Dropbox/région Paca/Données IRIS/Prestas légales PACA.xls", pattern = "Code région")
+load("./data/RP_2011_IRIS_LOG.Rdata")
+cnaf <- read.xls("./data/Prestas légales PACA.xls", pattern = "Code région")
 cnaf <- cnaf %>%
   mutate(CodeIris = paste0(sprintf("%05.0f", `Code.département...commune`),
                            sprintf("%04.0f", `Code.IRIS`)))
-cnaf_com <- read.csv("/media/Data/Dropbox/Thèse/données CAF/Solidarité insertion_2013_communes_ss.csv", sep = ";", as.is = TRUE, check.names = FALSE, na.strings = "nc")
+cnaf_com <- read.csv("./data/Solidarité insertion_2013_communes_ss.csv", sep = ";", as.is = TRUE, check.names = FALSE, na.strings = "nc")
 
 df_iris <- cnaf$Nombre.d.allocataires.percevant.le.Revenu.de.Solidarité.Active..Métropole. / RP_2011_IRIS_LOG[match(cnaf$CodeIris, RP_2011_IRIS_LOG$IRIS), "P11_RP"] * 100
 pop <- RP_2011_IRIS_LOG %>%
@@ -82,15 +82,15 @@ df_cnaf <- data.frame(ID = c(RP_2011_IRIS_LOG[match(cnaf$CodeIris, RP_2011_IRIS_
 
 # dispatchage des données électorales sur les IRIS
 
-load("/media/Data/Dropbox/Thèse/données propres/cartes/BV2012PACA.Rdata")
+load("./data/BV2012PACA.Rdata")
 bvAMM <- PACA_BV12[substr(PACA_BV12@data$ID, 1, 5) %in% AMM, ]
 
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS04.Rdata")
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS05.Rdata")
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS06.Rdata")
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS13.Rdata")
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS83.Rdata")
-load("/media/Data/Dropbox/DonneesIGN_ContoursIRIS/IRISCONTOURS-IRIS84.Rdata")
+load("./data/IRISCONTOURS-IRIS04.Rdata")
+load("./data/IRISCONTOURS-IRIS05.Rdata")
+load("./data/IRISCONTOURS-IRIS06.Rdata")
+load("./data/IRISCONTOURS-IRIS13.Rdata")
+load("./data/IRISCONTOURS-IRIS83.Rdata")
+load("./data/IRISCONTOURS-IRIS84.Rdata")
 
 `IRISCONTOURS-IRIS04` <- spChFIDs(`IRISCONTOURS-IRIS04`, `IRISCONTOURS-IRIS04`@data$DCOMIRIS)
 `IRISCONTOURS-IRIS05` <- spChFIDs(`IRISCONTOURS-IRIS05`, `IRISCONTOURS-IRIS05`@data$DCOMIRIS)
